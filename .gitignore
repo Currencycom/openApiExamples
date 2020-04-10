@@ -1,0 +1,21 @@
+# Logs
+logs
+*.log*
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+/package-lock.json
+
+
+.idea/.gitignore
+.idea/misc.xml
+.idea/modules.xml
+.idea/service-automation.iml
+.idea/vcs.xml
+
+
+

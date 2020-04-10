@@ -1,0 +1,18 @@
+{
+  "name": "api-examples",
+  "version": "1.0.0",
+  "description": "for services",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Currencycom/openApiExamples.git"
+  },
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "10.17.0",
+    "crypto-js": "3.1.9-1",
+    "npm": "6.13.6",
+    "ws": "7.2.3"
+  }
+}
