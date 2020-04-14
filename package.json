@@ -7,7 +7,9 @@
     "type": "git",
     "url": "https://github.com/Currencycom/openApiExamples.git"
   },
-  "scripts": {},
+  "scripts": {
+    "test:ws": "node api_ws/intro.js"
+  },
   "dependencies": {},
   "devDependencies": {
     "@types/node": "10.17.0",
