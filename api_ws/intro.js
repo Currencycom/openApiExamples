@@ -38,22 +38,18 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
     });
 
     ws.on('message', async function incoming(data) {
-        //console.log(data);
+
         let compressed = typeof data != 'string';
         if (compressed) {
         }
         response = JSON.parse(data);
         console.log("-- response compressed = " + compressed);
-        //console.log(response);
         responseList.push(response);
-        //console.log( responseList);
-        //console.log('{ values: [ 2, 5, 10, 20 ], value: 20 }')
     });
 
     await sleep(2000);
 
     console.log("start test...");
-
 
     request.destination = "/api/v1/leverageSettings";
     request.correlationId = request.correlationId + 1;
@@ -65,7 +61,7 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
 
     await sleep(5000);
 
-     index = responseList.findIndex(i => i.correlationId === request.correlationId.toString());
+    index = responseList.findIndex(i => i.correlationId === request.correlationId.toString());
 
     console.log('============================');
     console.log('index: ' + index);
@@ -94,7 +90,6 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
 
 // Get ticker request
 
-
     request.destination = "/api/v1/ticker/24hr";
     request.correlationId = request.correlationId + 1;
     request.payload = {"symbol": symbol};
@@ -104,7 +99,7 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
 
     await sleep(5000);
 
-     index = responseList.findIndex(i => i.correlationId === request.correlationId.toString());
+    index = responseList.findIndex(i => i.correlationId === request.correlationId.toString());
 
     console.log('============================');
     console.log('index: ' + index);
@@ -113,7 +108,6 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
     console.log('============================');
 
 // Get klines request
-
 
     request.destination = "/api/v1/klines";
     request.correlationId = request.correlationId + 1;
@@ -125,14 +119,13 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
 
     await sleep(5000);
 
-     index = responseList.findIndex(i => i.correlationId === request.correlationId.toString());
+    index = responseList.findIndex(i => i.correlationId === request.correlationId.toString());
 
     console.log('============================');
     console.log('index: ' + index);
     console.log(responseList[index]);
     console.log(responseList[index].payload);
     console.log('============================');
-
 
 // Get aggTrades create
 
@@ -206,7 +199,7 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
     console.log('============================');
 
     orderId = responseList[index].payload.orderId;
-    console.log(orderId)
+    console.log(orderId);
 
 //Get exchange orders
 
@@ -220,11 +213,36 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
     ws.send(message);
 
     await sleep(5000);
-    //console.log(response) ;
 
-    //console.log(responseList[0]);
     index = responseList.findIndex(i => i.correlationId === request.correlationId.toString());
 
+
+    console.log('============================');
+    console.log('index: ' + index);
+    console.log(responseList[index]);
+    console.log(responseList[index].payload);
+    console.log('============================');
+
+//Update leverage order
+    request.destination = "/api/v1/updateTradingOrder";
+    request.correlationId = request.correlationId + 1;
+    request.payload = {
+        "orderId": orderId,
+        "takeProfit": '11000',
+        "stopLoss": '5000',
+        "type": 'LIMIT',
+        "timestamp": Date.now(),
+        "apiKey": apiKey
+    };
+
+    request.payload.signature = getHash(request);
+    message = JSON.stringify(request);
+    console.log(message);
+    ws.send(message);
+
+    await sleep(5000);
+
+    index = responseList.findIndex(i => i.correlationId === request.correlationId.toString());
 
     console.log('============================');
     console.log('index: ' + index);
@@ -244,10 +262,8 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
     ws.send(message);
 
     await sleep(5000);
-    //console.log(response) ;
 
-    //console.log(responseList[0]);
-     index = responseList.findIndex(i => i.correlationId === request.correlationId.toString());
+    index = responseList.findIndex(i => i.correlationId === request.correlationId.toString());
 
     console.log('============================');
     console.log('index: ' + index);
@@ -268,15 +284,13 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
 
     await sleep(5000);
 
-     index = responseList.findIndex(i => i.correlationId === request.correlationId.toString());
-
+    index = responseList.findIndex(i => i.correlationId === request.correlationId.toString());
 
     console.log('============================');
     console.log('index: ' + index);
     console.log(responseList[index]);
     console.log(responseList[index].payload);
     console.log('============================');
-
 
 //Create Leverage trading positions
 
@@ -336,7 +350,7 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
 
     positionId = responseList[index].payload.positions[0].id;
 
-//update trading position
+//Update trading position
 
     request.destination = "/api/v1/updateTradingPosition";
     request.correlationId = request.correlationId + 1;
@@ -363,7 +377,6 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
     console.log(responseList[index].payload);
     console.log('============================');
 
-
 //Close Trading Position
 
     request.destination = "/api/v1/closeTradingPosition";
@@ -385,27 +398,28 @@ const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
     console.log(responseList[index].payload);
     console.log('============================');
 
-    await sleep(5000);
+//Finish
+    await sleep(3000);
 
     ws.close();
 
 })();
 
-    function getHash(request) {
-        let payload = "";
-        Object.keys(request.payload).sort().forEach(function (key) {
-            payload += key + "=" + request.payload[key] + "&";
-        });
-        payload = payload.substring(0, payload.length - 1);
-        console.log(payload);
-        let hash = CryptoJS.HmacSHA256(payload, apiSecret).toString();
-        console.log(hash);
-        return hash;
-    }
+function getHash(request) {
+    let payload = "";
+    Object.keys(request.payload).sort().forEach(function (key) {
+        payload += key + "=" + request.payload[key] + "&";
+    });
+    payload = payload.substring(0, payload.length - 1);
+    console.log(payload);
+    let hash = CryptoJS.HmacSHA256(payload, apiSecret).toString();
+    console.log(hash);
+    return hash;
+}
 
-    function sleep(millis) {
-        return new Promise(resolve => setTimeout(resolve, millis));
-    }
+function sleep(millis) {
+    return new Promise(resolve => setTimeout(resolve, millis));
+}
 
 
 
