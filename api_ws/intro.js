@@ -12,7 +12,7 @@ let message, request, response = {};
 
 request = {"destination": "time", "correlationId": 1, "payload": {}};
 
-const ws = new WebSocket('wss://api.backend-capital.com/proxy/connect', {
+const ws = new WebSocket('wss://api-adapter.backend.currency.com/connect', {
     perMessageDeflate: true
 });
 
