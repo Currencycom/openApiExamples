@@ -28,8 +28,11 @@ const socketApi = new SocketClient(undefined, API_KEY, API_SECRET);
     // // Get exchangeInfo
     //
     // socketApi.sendMessage("/api/v1/exchangeInfo");
-    // // Subscribe to depthMarketData
+    // // Subscribe to MarketData
     //
+    socketApi.sendMessage('marketData.subscribe', {"symbols": ['BTC/USD', 'LTC/USD', 'BTC/USD_LEVERAGE', "Natural Gas", "Oil - Crude."]});
+
+    // // Subscribe to depthMarketData
     // socketApi.sendMessage('depthMarketData.subscribe', {"symbols": ['BTC/USD', 'LTC/USD', 'BTC/USD_LEVERAGE', "Natural Gas", "Oil - Crude."]});
     //
     // // Subscribe to trades
